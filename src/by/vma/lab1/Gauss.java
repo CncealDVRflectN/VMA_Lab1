@@ -3,12 +3,50 @@ package by.vma.lab1;
 public class Gauss {
     private static Matrix a;
     private static Vector b;
-    public static Vector gauss(Vector b) {
+    private static final int n = 5;
+
+    public static void vma() {
+        Vector x;
+        Matrix inverseMtr;
+        Matrix identityMtr = new Matrix();
+        Matrix rMtr;
+        double r;
         a = new Matrix();
-        Vector x = new Vector(5);
+        b = new Vector();
+        a.fillDefault();
+        b.fillDefault();
+        try {
+            x = gauss(b);
+            System.out.println("Solution: ");
+            x.print();
+            r = a.mul(x).subtract(b).normI();
+            System.out.print("r = ");
+            System.out.printf("%e", r);
+            System.out.println();
+            inverseMtr = inverseMatrix();
+            System.out.println("Inverse matrix: ");
+            inverseMtr.print();
+            identityMtr.fillE(n);
+            a.fillDefault();
+            rMtr = a.mul(inverseMtr).subtract(identityMtr);
+            System.out.println("R: ");
+            rMtr.print();
+            System.out.print("R.normI = ");
+            System.out.printf("%e", rMtr.normI());
+            System.out.println();
+            System.out.print("A.normI * A[-1].normI = ");
+            System.out.printf("%e", a.normI() * inverseMtr.normI());
+            System.out.println();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Vector gauss(Vector b) throws Exception {
+        a = new Matrix();
+        Vector x = new Vector(n);
         double det = 1;
         boolean isDetNegative = false;
-        int n = 5;
         double max;
         int maxk;
         a.fillDefault();
@@ -45,7 +83,7 @@ public class Gauss {
                 x.vector[i] -= a.matrix[i][j] * x.vector[j];
             }
         }
-        if(isDetNegative){
+        if (isDetNegative) {
             det *= -1;
         }
         System.out.print("Determinant: ");
@@ -54,23 +92,19 @@ public class Gauss {
         return x;
     }
 
-    public static void vma() {
-        Vector x;
-        double r;
-        a = new Matrix();
-        b = new Vector();
-        a.fillDefault();
-        b.fillDefault();
-        x = gauss(b);
-        System.out.println("Solution: ");
-        x.print();
-        try {
-            r = a.mul(x).subtract(b).findMax();
-            System.out.print("r = ");
-            System.out.printf("%e", r);
-            System.out.println();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static Matrix inverseMatrix() throws Exception {
+        Matrix inverse = new Matrix(n, n);
+        Vector delta = new Vector(n);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (j == i) {
+                    delta.vector[j] = 1;
+                } else {
+                    delta.vector[j] = 0;
+                }
+            }
+            inverse.setColumn(i, gauss(delta));
         }
+        return inverse;
     }
 }

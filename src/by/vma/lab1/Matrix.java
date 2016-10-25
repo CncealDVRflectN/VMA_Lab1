@@ -11,13 +11,16 @@ public class Matrix {
         this.matrix = null;
     }
 
-    public Matrix(int lines, int columns) {
+    public Matrix(int lines, int columns) throws Exception {
+        if (lines < 1 || columns < 1) {
+            throw new Exception("Incorrect size.");
+        }
         this.lines = lines;
         this.columns = columns;
         this.matrix = new double[lines][columns];
     }
 
-    public Matrix(Matrix init) {
+    public Matrix(Matrix init) throws Exception {
         this(init.getLines(), init.getColumns());
         for (int i = 0; i < lines; i++) {
             for (int j = 0; j < columns; j++) {
@@ -34,10 +37,29 @@ public class Matrix {
         return columns;
     }
 
+    public void setLine(int index, Vector line) throws Exception {
+        if (line.getLength() != columns) {
+            throw new Exception("Incorrect vector.");
+        }
+        for (int i = 0; i < columns; i++) {
+            matrix[index][i] = line.vector[i];
+        }
+    }
+
+    public void setColumn(int index, Vector column) throws Exception {
+        if (column.getLength() != lines) {
+            throw new Exception("Incorrect vector.");
+        }
+        for (int i = 0; i < lines; i++) {
+            matrix[i][index] = column.vector[i];
+        }
+    }
+
     public void print() {
         for (double[] i : matrix) {
             for (double j : i) {
                 System.out.printf("%.5f", j);
+                System.out.print("  ");
             }
             System.out.println();
         }
@@ -72,15 +94,74 @@ public class Matrix {
         this.matrix = a;
     }
 
+    public void fillE(int n) {
+        lines = n;
+        columns = n;
+        matrix = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == j) {
+                    matrix[i][j] = 1;
+                } else {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    public double normI() {
+        double maxSum = -1;
+        double sum;
+        for (int i = 0; i < lines; i++) {
+            sum = 0;
+            for (int j = 0; j < columns; j++) {
+                sum += Math.abs(matrix[i][j]);
+            }
+            if (sum > maxSum) {
+                maxSum = sum;
+            }
+        }
+        return maxSum;
+    }
+
     public Vector mul(Vector vector) throws Exception {
-        if(columns != vector.getLength()) {
+        if (columns != vector.getLength()) {
             throw new Exception("Incorrect matrix or vector.");
         }
         Vector result = new Vector(vector.getLength());
-        for(int i = 0; i < lines; i++) {
+        for (int i = 0; i < lines; i++) {
             result.vector[i] = 0;
-            for(int j = 0; j < columns; j++) {
+            for (int j = 0; j < columns; j++) {
                 result.vector[i] += matrix[i][j] * vector.vector[j];
+            }
+        }
+        return result;
+    }
+
+    public Matrix mul(Matrix mtr) throws Exception {
+        if (columns != mtr.getLines()) {
+            throw new Exception("Incorrect matrix.");
+        }
+        Matrix result = new Matrix(lines, mtr.getColumns());
+        for (int i = 0; i < result.getLines(); i++) {
+            for (int j = 0; j < result.getColumns(); j++) {
+                result.matrix[i][j] = 0;
+                for (int k = 0; k < columns; k++) {
+                    result.matrix[i][j] += this.matrix[i][k] * mtr.matrix[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    public Matrix subtract(Matrix mtr) throws Exception {
+        if (lines != mtr.getLines() || columns != mtr.getColumns()) {
+            throw new Exception("Incorrect matrix.");
+        }
+        Matrix result = new Matrix(lines, columns);
+        for (int i = 0; i < lines; i++) {
+            for (int j = 0; j < columns; j++) {
+                result.matrix[i][j] = this.matrix[i][j] - mtr.matrix[i][j];
             }
         }
         return result;

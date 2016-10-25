@@ -9,7 +9,10 @@ public class Vector {
         this.vector = null;
     }
 
-    public Vector(int length) {
+    public Vector(int length) throws Exception {
+        if (length < 1) {
+            throw new Exception("Incorrect size.");
+        }
         this.length = length;
         vector = new double[length];
     }
@@ -26,7 +29,7 @@ public class Vector {
     }
 
     public void print() {
-        for(double item : vector) {
+        for (double item : vector) {
             System.out.printf("%.5f", item);
             System.out.println();
         }
@@ -45,21 +48,21 @@ public class Vector {
     }
 
     public Vector subtract(Vector sub) throws Exception {
-        if(length != sub.getLength()) {
+        if (length != sub.getLength()) {
             throw new Exception("Incorrect vector.");
         }
         Vector result = new Vector(length);
-        for(int i = 0; i < length; i++) {
+        for (int i = 0; i < length; i++) {
             result.vector[i] = this.vector[i] - sub.vector[i];
         }
         return result;
     }
 
-    public double findMax() {
-        double max = vector[0];
-        for(int i = 1; i < length; i++) {
-            if(vector[i] > max) {
-                max = vector[i];
+    public double normI() {
+        double max = Math.abs(vector[0]);
+        for (int i = 1; i < length; i++) {
+            if (Math.abs(vector[i]) > max) {
+                max = Math.abs(vector[i]);
             }
         }
         return max;

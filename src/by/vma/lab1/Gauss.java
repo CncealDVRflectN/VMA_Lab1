@@ -116,6 +116,7 @@ public class Gauss {
                 }
             }
             inverse.setColumn(i, gauss(delta, false));
+            a.fillDefault();
         }
         return inverse;
     }

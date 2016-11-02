@@ -55,11 +55,14 @@ public class Matrix {
         }
     }
 
-    public void print() {
+    public void print(boolean exponent) {
         for (double[] i : matrix) {
             for (double j : i) {
-                System.out.printf("%.5f", j);
-                System.out.print("  ");
+                if(exponent){
+                    System.out.printf("%e  ", j);
+                } else {
+                    System.out.printf("%.5f  ", j);
+                }
             }
             System.out.println();
         }

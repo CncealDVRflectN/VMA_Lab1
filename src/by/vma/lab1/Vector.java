@@ -28,10 +28,13 @@ public class Vector {
         return length;
     }
 
-    public void print() {
+    public void print(boolean exponent) {
         for (double item : vector) {
-            System.out.printf("%.5f", item);
-            System.out.println();
+            if(exponent){
+                System.out.printf("%e\n", item);
+            } else {
+                System.out.printf("%.5f\n", item);
+            }
         }
     }
 

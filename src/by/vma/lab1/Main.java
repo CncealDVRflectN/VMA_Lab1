@@ -274,7 +274,7 @@ public class Main {
             max = a.matrix[k][k];
             maxk = k;
             for (int i = k + 1; i < n; i++) {
-                if (max < Math.abs(a.matrix[k][i])) {
+                if (Math.abs(max) < Math.abs(a.matrix[k][i])) {
                     max = a.matrix[k][i];
                     maxk = i;
                 }

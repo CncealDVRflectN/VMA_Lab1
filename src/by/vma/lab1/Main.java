@@ -263,6 +263,7 @@ public class Main {
         boolean isDetNegative = false;
         double max;
         int maxk;
+        int index;
         a.fillDefault();
         for(int i = 0; i < n; i++) {
             xIndexes.vector[i] = i;
@@ -299,9 +300,10 @@ public class Main {
             }
         }
         for (int i = n - 1; i >= 0; i--) {
-            x.vector[(int)xIndexes.vector[i]] = b.vector[i];
+            index = (int)(xIndexes.vector[i]);
+            x.vector[index] = b.vector[i];
             for (int j = i + 1; j < n; j++) {
-                x.vector[(int)xIndexes.vector[i]] -= a.matrix[i][j] * x.vector[j];
+                x.vector[index] -= a.matrix[i][j] * x.vector[(int)(xIndexes.vector[j])];
             }
         }
         if(determinant) {
